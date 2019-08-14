@@ -1,18 +1,242 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <link href="./resources/css/ext-all.css" rel="stylesheet">
-      <script src="./ext-base.js"></script>
-      <script src="./ext-all.js"></script>
-      
-	  <Script>
-Ext.onReady(function() {
-  
-});
-</Script>
 
-   </head>
-   <body>
-      <div id=""></div>
-   </body>
+<head>
+   <link href="./resources/css/ext-all.css" rel="stylesheet">
+   <script src="./ext-base.js"></script>
+   <script src="./ext-all.js"></script>
+   
+
+   <Script>
+      Ext.onReady(function () {
+         //logo
+         var logo = new Ext.BoxComponent({
+            height: 52,
+            width: 132,
+            style: {
+               backgroundImage: `url('./hpc26.png')`,
+               marginRight: `21px`
+            },
+            autoEl: {
+               tag: 'div',
+            }
+         });
+
+         //field
+         var searchField = new Ext.form.TextField({
+            width: 486,
+            height: 45,
+            style: {
+               border: `none`,
+               background: `none`,
+               fontSize: `16px`,
+               marginLeft: `10px`
+            }
+         });
+
+         var seachBox = new Ext.BoxComponent({
+            height: 45,
+            width: 45,
+            style: {
+               border: `8px solid transparent`,
+               backgroundImage: `url('./hpc26.png')`,
+               backgroundPosition: `-169px -63px`,
+               cursor: 'pointer'
+            },
+            autoEl: {
+               tag: 'div',
+            }
+         });
+
+         var nationalSeachBar = new Ext.Container({
+            layout: 'hbox',
+            height: 47,
+            width: 'auto',
+            cls: 'search-bar-container',
+            style: {
+               position: `relative`,
+               border: `1px #ccc solid`,
+               borderRadius: `0 6px 6px 6px`,
+               background: `#FFF`,
+            },
+            renderTo: 'cn-search-bar',
+            items: [
+               searchField,
+               seachBox,
+            ]
+         });
+
+         var nationalSeachBar = new Ext.Container({
+            layout: 'hbox',
+            height: 47,
+            width: 'auto',
+            cls: 'search-bar-container',
+            style: {
+               position: `relative`,
+               border: `1px #ccc solid`,
+               borderRadius: `0 6px 6px 6px`,
+               background: `#FFF`,
+            },
+            renderTo: 'en-search-bar',
+            items: [
+               searchField,
+               seachBox,
+            ]
+         });
+
+      var searchBarTabs = new Ext.TabPanel({
+         activeTab: 1,
+         tabCls: 'search-bar-tabs-tab',
+         baseCls: 'search-bar-tabs',
+         ctCls: 'search-bar-container',
+         width: 535,
+         style: {
+            position: `relative`,
+            marginLeft: `21px`
+         },
+         items: [{
+            title: '国内版',
+            contentEl: 'cn-search-bar'
+         }, {
+            title: '国际版',
+            contentEl: 'en-search-bar'
+         }],
+      });
+      // var changingImage = Ext.create('Ext.Img', {
+      //    src: 'http://www.sencha.com/img/20110215-feat-html5.png',
+      //    width: 184,
+      //    height: 90,
+      //    renderTo: Ext.getBody()
+      // });
+
+      // Ext.create({
+      //    xtype: 'draw',
+      //    renderTo: 'a1',
+      //    sprites: [{
+      //       type: 'image',
+      //       src: '/background.jpg'
+      //    }],
+      // });
+      var search = new Ext.Container({
+         pageY: 190,
+         pageX: 140,
+         width: '100%',
+         layout: 'hbox',
+         layoutConfig: {
+            padding: '36px 0 0 0'
+         },
+         style: {
+            position: 'absolute',
+         },
+         items: [
+            logo,
+            searchBarTabs
+         ]
+      });
+
+      new Ext.Viewport({
+         renderTo: 'seach',
+         items: [
+            search
+         ]
+      })
+      });
+   </Script>
+
+</head>
+
+<body>
+   <div id="a1">
+      <div id="seach"></div>
+      <div id="cn-search-bar" class="x-hide-display"></div>
+      <div id="en-search-bar" class="x-hide-display"></div>
+   </div>
+</body>
+
+<style>
+      body {
+         background: url(background.jpg)
+      }
+
+      .search-bar-tabs {
+         width: 100%;
+         top: 0 !important;
+      }
+
+      .search-bar-tabs-header {
+         display: flex;
+         position: relative;
+         bottom: -1px;
+         z-index: 2;
+      }
+
+      .search-bar-tabs-header .x-tab-strip-top {
+         background: transparent;
+         width: 100%;
+         border-bottom: none;
+      }
+
+      .search-bar-tabs-header .x-tab-strip-top li {
+         height: 26px;
+         padding: 5px 7px 5px 17px;
+         margin: 0;
+         background: rgba(255, 255, 255, .8);
+         display: block;
+         position: relative;
+         border-radius: 2px 2px 0 0;
+         border-top: 1px solid transparent;
+         border-left: 1px solid transparent;
+      }
+
+      .search-bar-tabs-header .x-tab-strip-top li:after {
+         content: ' ';
+         position: absolute;
+         top: 0;
+         right: -10px;
+         display: block;
+         border-top: 36px solid transparent;
+         border-left: 10px solid rgba(255, 255, 255, .8);
+      }
+
+      .search-bar-tabs-header .x-tab-strip-top li.x-tab-strip-active {
+         background: #FFF;
+         border-top: 1px solid #CCC;
+         border-left: 1px solid #CCC;
+      }
+
+      .search-bar-tabs-header .x-tab-strip-top li.x-tab-strip-active:after {
+         border-left-color: #FFF;
+      }
+
+      .search-bar-tabs-header .x-tab-strip-top li+li {
+         margin-left: 5px;
+      }
+
+      .search-bar-tabs-header span.x-tab-strip-text {
+         font-size: 16px;
+         color: #010101;
+      }
+
+      .search-bar-tabs-header .x-tab-strip-active span.x-tab-strip-text {
+         font-weight: 400;
+      }
+
+      .search-bar-tabs-header .x-tab-right,
+      .search-bar-tabs-header .x-tab-left,
+      .search-bar-tabs-header .x-tab-strip-inner {
+         background: transparent;
+      }
+
+      .search-bar-tabs-body .x-panel-body {
+         background: transparent;
+      }
+
+      .search-bar-tabs-body .x-panel-bwrap,
+      .search-bar-tabs-body .x-panel-body,
+      .search-bar-container,
+      .search-bar-container .x-box-inner {
+         overflow: visible;
+      }
+   </style>
+
 </html>

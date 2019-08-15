@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../base/resources/css/ext-all.css" rel="stylesheet">
+    <script src="../base/ext-base.js"></script>
+    <script src="../base/ext-all.js"></script>
+
+
+    <Script>
+        Ext.onReady(function () {
+            //跳转
+            var btnHander = function (direction) {
+                var cardPanel = Ext.getCmp('cardPanel').layout;
+                var prev = Ext.getCmp('card-prev');
+                var next = Ext.getCmp('card-next');
+                var activeId = cardPanel.activeItem.id;
+                // console.log(activeId);
+                if (activeId == 'item0') {
+                    if (direction == 1) {
+                        cardPanel.setActiveItem(1);
+                        prev.setDisabled(false);
+                        
+                    }
+                } else if (activeId == 'item1') {
+                    if (direction == -1) {
+                        cardPanel.setActiveItem(0);
+                        prev.setDisabled(true);
+                    } else {
+                        getQ1Answer()
+                        cardPanel.setActiveItem(2);
+                        next.setDisabled(true);
+                    }
+                } else if (activeId == 'item2') {
+                    if (direction == -1) {
+                        cardPanel.setActiveItem(1);
+                        next.setDisabled(false);
+                    }
+                }
+            }
+            //创建radio
+            function createRadio(answer) {
+                let raw = new Ext.form.Radio({
+                    name: 'garbage',
+                    boxLabel: answer
+                });
+                return raw;
+            }
+            //create Checkbox
+            function createCheckbox(answer) {
+                let raw = new Ext.form.Checkbox({
+                    boxLabel: answer
+                });
+                return raw;
+            }
+            var AnswerRecord = new Ext.data.Record.create([{
+                name: 'answer1',
+                type: 'string'
+            }, {
+                name: 'answer2',
+                type: 'string'
+            }]);
+
+            function getQ1Answer() {
+                let q1arr = Ext.getCmp('item0').items.items;
+                let q2arr = Ext.getCmp('item1').items.items;
+                // let checkAnswer = arr.filter(item => item.checked)[0].boxLabel;
+                var selectedBoxLabel = q1arr.filter(item => Ext.getCmp(item.id).getValue())[0];
+                var answerData = {
+                    answer1: selectedBoxLabel ? selectedBoxLabel.boxLabel : '',
+                    answer2: q2arr.filter(item => Ext.getCmp(item.id).getValue()).map(item => item
+                        .boxLabel) || ''
+                };
+                item3.form.loadRecord(new AnswerRecord(answerData));
+            };
+
+            var item1 = new Ext.Panel({
+                id: 'item0',
+                title: 'Q1：番茄酱属于以下哪种垃圾？（单选）',
+                height: 300,
+                items: [
+                    createRadio("湿垃圾"),
+                    createRadio("干垃圾"),
+                    createRadio("有害垃圾"),
+                    createRadio("可回收物"),
+                ],
+                //cls: 'empty'
+            });
+
+            var item2 = new Ext.Panel({
+                id: 'item1',
+                title: 'Q50：老王出门遛狗后，以下哪种是正确处理狗粑粑的办法?（多选）',
+                height: 300,
+                items: [
+                    createCheckbox("把粑粑用废报纸包好带回家冲掉"),
+                    createCheckbox("受污染的报纸按有害垃圾处理"),
+                    createCheckbox("没受污染的报纸按可回收垃圾处理"),
+                    createCheckbox("受污染的报纸浸水后按湿垃圾处理"),
+                ],
+                cls: 'empty'
+            });
+
+            var item3 = new Ext.form.FormPanel({
+                id: 'item2',
+                title: '提 交',
+                height: 400,
+                items: [{
+                        xtype: 'fieldset',
+                        title: '你的答案：',
+                        items: [{
+                            id: 'answer1',
+                            xtype: 'textfield',
+                            allowBlank: false,
+                            blankText: '请返回答题！',
+                            fieldLabel: 'Q1',
+                            emptyText: '请返回答题',
+                        }, {
+                            id: 'answer2',
+                            xtype: 'textfield',
+                            allowBlank: false,
+                            blankText: '请返回答题！',
+                            fieldLabel: 'Q50',
+                            emptyText: '请返回答题',
+                        }, ]
+                    },
+                    {
+                        xtype: 'button',
+                        text: 'submit',
+                    },
+                ],
+                cls: 'empty'
+            });
+
+
+
+            var cardpanel = new Ext.Panel({
+                id: 'cardPanel',
+                renderTo: 'but',
+                title: '调查问卷',
+                region: 'center',
+                layout: 'card',
+                width: '50%',
+                // x: 200,
+                activeItem: 0,
+                autoDestroy: false,
+                bodyStyle: 'border-top:0px',
+                defaults: {
+                    border: false
+                },
+                items: [
+                    item1,
+                    item2,
+                    item3,
+                ],
+                bbar: [{
+                        id: 'card-prev',
+                        text: '上一步',
+                        width: 50,
+                        disabled: true,
+                        handler: function () {
+                            btnHander(-1);
+                        }
+                    },
+                    {
+                        id: 'card-next',
+                        text: '下一步',
+                        width: 50,
+                        handler: function () {
+                            btnHander(1);
+                        }
+                    }
+                ]
+            });
+
+        });
+    </Script>
+
+</head>
+
+<body>
+    <div id="but"></div>
+    <div id="test1"></div>
+</body>
+
+</html>

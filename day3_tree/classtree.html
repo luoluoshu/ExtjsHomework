@@ -9,7 +9,95 @@
 
 
     <Script>
-        Ext.onReady(function (){
+        Ext.onReady(function () {
+            var createItem = (name) => {
+                return {
+                    text: name,
+                    leaf: true
+                }
+            }
+
+
+
+            var tree = new Ext.tree.TreePanel({
+                useArrows: true,
+                border: false,
+                //containerScroll: true,
+                loader: new Ext.tree.TreeLoader({
+                    dataUrl: 'classtree.json'
+                }),
+                root: new Ext.tree.AsyncTreeNode({
+                    text: 'ITA'
+                }),
+
+                listeners: {
+                    click: function (node) {
+                        console.log('当前node为');
+                        console.log(node);
+                        this.selectedNode = node;
+                    }
+                }
+            });
+
+            var schoolNode = tree.root;
+
+
+            var inputPanel = new Ext.TabPanel({
+                id: 'inputPanel',
+                activeTab: 0,
+                width: 400,
+                height: 100,
+                items: [{
+                    id: 'student',
+                    title: 'student',
+                    xtype: 'textfield'
+                }, {
+                    id: 'class',
+                    title: 'class',
+                    xtype: 'textfield'
+                }],
+                buttons: [{
+                    text: 'add',
+                    listeners: {
+                        click: function () {
+
+
+                            let inputPanel = Ext.getCmp('inputPanel');
+                            let type = inputPanel.getActiveTab().title;
+                            let selectedNote = tree.selectedNode;
+
+                            if (selectedNote == null)
+                                return;
+
+                            console.log(selectedNote);
+                            if (type === 'student') {
+                                let student = Ext.getCmp('student');
+                                if (schoolNode == selectedNote.parentNode) {
+                                    if (selectedNote.leaf)
+                                        selectedNote.leaf = false;
+
+                                    selectedNote.appendChild(createItem(student
+                                        .getValue()));
+
+                                } else if (selectedNote.parentNode != null) {
+                                    selectedNote.parentNode.appendChild(
+                                        createItem(student.getValue()));
+                                }
+                            } else if (type === 'class') {
+                                let className = Ext.getCmp('class');
+                                schoolNode.appendChild(createItem(className
+                                    .getValue()));
+                            }
+
+                        }
+                    }
+                }]
+            });
+            var viewport = new Ext.Viewport({
+                title: 'student manager',
+                items: [tree, inputPanel]
+            });
+
 
         });
     </Script>

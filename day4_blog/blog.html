@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../resources/css/ext-all.css" rel="stylesheet">
+    <script src="../ext-base.js"></script>
+    <script src="../ext-all.js"></script>
+
+
+    <Script>
+        Ext.onReady(function () {
+            // editor
+            let textArea = new Ext.form.HtmlEditor({
+                id: 'textarea',
+                layout: "fit",
+                width: 500,
+                height: 420
+            });
+            //reply button
+            let btn = new Ext.Button({    
+                        text: 'reply',
+                        handler: function () {
+                            progressWindow.show()
+                            progressBar.wait({
+                                duration: 3000,
+                                interval: 1000,
+                                increment: 3,
+                                text: 'Loading',
+                                fn: function () {
+                                    Ext.Msg.alert('Result', 'Success');
+                                    progressWindow.hide();
+                                }
+                            })
+                        }                   
+            });
+            //remove editor value
+            let remove = function (form) {
+                Ext.getCmp('textarea').setValue('');
+            };
+            //append table form
+            const tableInsertForm = new Ext.FormPanel({
+                frame: true,
+                padding: '10px',
+                items: [{
+                    xtype: 'numberfield',
+                    id: 'col',
+                    fieldLabel: 'Cols',
+                    minValue: 1,
+                    allowBlank: false,
+                    allowDecimals: false
+                }, {
+                    xtype: 'numberfield',
+                    id: 'row',
+                    fieldLabel: 'Rows',
+                    minValue: 1,
+                    allowBlank: false,
+                    allowDecimals: false
+                }],
+            })
+            // appennd table window
+            const tableInsertWindow = new Ext.Window({
+                title: 'Append Table',
+                layout: 'fit',
+                width: 300,
+                height: 150,
+                items: [tableInsertForm],
+                bbar: [
+                    '->',
+                    {
+                        text: 'Cancel'
+                    },
+                    '',
+                    {
+                        text: 'Append',
+                        handler: onTableInsert
+                    }
+                ]
+            })
+
+            const tableXTemplate = new Ext.XTemplate(
+                `<table border="1" cellspacing="0"><tbody>`,
+                `<tpl for="rows">`,
+                `<tr>`,
+                `<tpl for=".">`,
+                `<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>`,
+                `</tpl>`,
+                `</tr>`,
+                `</tpl>`,
+                `</tbody></table>`,
+            )
+            function handleInsertTable() {
+                tableInsertWindow.show();
+            };
+            const panel1 = new Ext.Panel({
+                // renderTo: 'but',
+                id:'panel1',
+                tbar: [{
+                        xtype: 'splitbutton',
+                        text: 'Edit',
+                        menu: [{
+                            text: 'Reset',
+                            listeners: {
+                                'click': function () {
+                                    remove('textarea');
+                                }
+                            }
+                        }]
+                    }, '-',
+                    {
+                        xtype: 'splitbutton',
+                        text: 'Insert',
+                        menu: [{
+                            text: 'Table',
+                            listeners: {
+                                'click': function () {
+                                    handleInsertTable();
+                                }
+                            }
+                        }]
+                    }
+                ]
+            });
+
+
+            //insert the table
+            function onTableInsert() {
+                const form = tableInsertForm.getForm();
+                const {
+                    col,
+                    row
+                } = form.getValues();
+                const _col = parseInt(col),
+                    _row = parseInt(row);
+                const _data = {}
+                _data.rows = Array(_row).fill(Array(_col).fill("1"))
+                const html = tableXTemplate.apply(_data)
+                textArea.setValue(textArea.getValue() + html)
+                form.reset();
+                tableInsertWindow.hide()
+            }
+
+            const progressBar = new Ext.ProgressBar({
+                text: 'Loading'
+            })
+            //progressbar window
+            const progressWindow = new Ext.Window({
+                layout: 'fit',
+                height: 40,
+                width: 300,
+                resizable: false,
+                modal: true,
+                closable: false,
+                items: [progressBar]
+            })
+            const menu = new Ext.menu.Menu({
+                items: [{
+                    id: 'menu-edit',
+                    text: 'Edit',
+                    menu: [{
+                        text: 'Reset',
+                        id: 'menu-reset',
+                        handler: remove('textarea'),
+                    }]
+                }, {
+                    id: 'menu-insert',
+                    text: 'Insert',
+                    menu: [{
+                        text: 'Table',
+                        id: 'menu-table',
+                        handler: handleInsertTable
+                    }]
+                }]
+            })
+
+            var mainPanel = new Ext.Panel({
+                renderTo: 'but',
+                id:'mainPanel',
+                title: 'blog reply',
+                // pageX: 300,
+                width: 500,
+                height: 500,
+
+                items: [
+                    panel1,
+                    textArea,
+                ],
+                bbar: [
+                    '->',
+                    btn
+                ]
+            });
+
+            
+            console.log(Ext.getCmp('mainPanel').el.dom);
+            Ext.getCmp('mainPanel').el.dom.oncontextmenu = function (event) {
+                event.preventDefault();
+                menu.showAt([event.offsetX, event.offsetY]);
+            }
+
+
+        });
+    </Script>
+
+</head>
+
+<body>
+    <div id="but"></div>
+    <div id="test1"></div>
+</body>
+
+</html>

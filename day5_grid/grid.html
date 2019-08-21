@@ -19,7 +19,7 @@
                     sex: Ext.fly('sex').getValue(),
                     age: Ext.fly('age').getValue(),
                     birthday: Ext.fly('birthday').getValue(),
-                    avatar: Ext.fly('sex').getValue(),
+                    avatar: Ext.fly('sex').getValue()
                 })
                 if (selectItem) {
                     groupStore.insert(selectItem + 1, newRecord)
@@ -87,7 +87,7 @@
                             return "<img src='https://cdn4.iconfinder.com/data/icons/business-conceptual-part1-1/513/business-woman-512.png' style='width:16px'>"
                         }
                     }
-                },
+                }
             ])
             var data = [
                 ['Mike', '1', 'male', '23', '1996-1-1', 'male'],
@@ -96,7 +96,7 @@
                 ['Jack', '2', 'female', '24', '1995-3-1', 'femalee'],
                 ['Tiger', '3', 'male', '22', '1997-3-1', 'male'],
                 ['Joshua', '3', 'female', '21', '1998-3-1', 'female'],
-                ['Danny', '3', 'male', '23', '1996-3-1', 'male'],
+                ['Danny', '3', 'male', '23', '1996-3-1', 'male']
             ]
             var groupStore = new Ext.data.GroupingStore({
                 proxy: new Ext.data.PagingMemoryProxy(data),
@@ -119,7 +119,7 @@
                         name: 'avatar'
                     }
                 ]),
-                groupField: 'class',
+                groupField: 'class'
             })
             groupStore.load({
                 params: {
@@ -252,7 +252,7 @@
                             addStudnetWindow.hide();
                         }
                     }
-                ],
+                ]
             })
             var addStudnetWindow = new Ext.Window({
                 title: 'Add new student',
@@ -260,7 +260,7 @@
                 layout: 'form',
                 items: [
                     form
-                ],
+                ]
             })
             var isGroup = false
             var panel = new Ext.Panel({
